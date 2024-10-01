@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -32,9 +33,25 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
                     val navigator = koinInject<Navigator>()
+
+                    ObserveAsEvents(flow = navigator.navigationActions) { action ->
+                        when (action) {
+                            is NavigationAction.Navigate -> navController.navigate(
+                                action.destination
+                            ) {
+                                action.navOptions(this)
+                            }
+
+                            NavigationAction.NavigationUp -> navController.navigateUp()
+                        }
+                    }
+
                     NavHost(
                         navController = navController,
                         startDestination = navigator.startDestination,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
                     ) {
                         navigation<Destination.AuthGraph>(
                             startDestination = Destination.LoginScreen

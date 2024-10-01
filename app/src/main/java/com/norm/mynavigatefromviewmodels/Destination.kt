@@ -3,7 +3,7 @@ package com.norm.mynavigatefromviewmodels
 import kotlinx.serialization.Serializable
 
 sealed interface Destination {
-    @Serializable
+     @Serializable
     data object HomeGraph : Destination
 
     @Serializable
